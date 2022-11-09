@@ -1,10 +1,54 @@
-Project name
+Trinkwasser Analyse (tiptap: https://atiptap.org/)
 ================
 
 # What is this project about?
 
-summarize in three sentences what this project is about and what central
-features it has.
+## General
+
+Analysis of Open Street Maps (OSM) data regarding drinking fountains in Germany.
+
+* For cities get the number of listed drinking points per 1000 inhabitants
+* Some cities provided official numbers of drinking fountains which can be compared
+to listed data in OSM
+* Analyse quality of meta data of the received points by comparing it with 
+defined mandatory information
+
+## Quality of Meta Data (German)
+
+Generelle beobachtbare Eigenschaften
+[https://wiki.openstreetmap.org/wiki/Tag:amenity%3Ddrinking_water](https://wiki.openstreetmap.org/wiki/Tag:amenity%3Ddrinking_water) 
+
+* Brunnentyp
+	* [fountain=bubbler](https://wiki.openstreetmap.org/wiki/Tag:fountain%3Dbubbler) (Trinkbrunnen, die einen bogenförmigen Strahl ausstoßen)
+	* [fountain=drinking](https://wiki.openstreetmap.org/wiki/Tag:fountain%3Ddrinking)  (allgemeiner Trinkwasserbrunnen)
+	* [man_made=water_tap](https://wiki.openstreetmap.org/wiki/Tag:man_made%3Dwater_tap) (Wasserhahn mit Trinkwasser)
+	* zusätzlich ist praktisch zu vermerken ob das Wasser nur über einen Brunnen läuft: [button_operated=yes/no](https://wiki.openstreetmap.org/wiki/Key:button_operated)
+* Flasche auffüllbar: [bottle=(yes/no/limited)](https://wiki.openstreetmap.org/wiki/Key:bottle
+* Barrierefreiheit: [wheelchair=(yes/no/limited)](https://wiki.openstreetmap.org/wiki/Key:wheelchair)
+* Frei Zugänglich (also auf öffentlichen Gelände?): [access=(yes/no/private…)](https://wiki.openstreetmap.org/wiki/Key:access)
+* Beschreibung oder Name -hier ist es sehr hilfreich wenn entweder in einer Beschreibung oder im Namen die Art des Trinkortes genannt wird (z.B. Trinkbrunnen).  Beschreibungen können unter verschiedenen Tags geführt sein. Namen sollen jedoch in der Regel nur vergeben werden, wenn das Objekt wirklich eine offizielle Bezeichnung hat - z.B. Löwenbrunnen 
+	* [description=*](https://wiki.openstreetmap.org/wiki/Key:description)
+		* description:[de](https://wiki.openstreetmap.org/w/index.php?title=Key:de&action=edit&redlink=1)=* (de=Deutsch)
+		* description:[en](https://wiki.openstreetmap.org/w/index.php?title=Key:en&action=edit&redlink=1)=* (en=Englisch)
+		* auch genutzte Tags, aber nicht ideal: comment
+	* [name=*](https://wiki.openstreetmap.org/wiki/Key:name)
+		* name:en
+		* name:de
+
+Sinnvolle Infos, die jedoch zusätzliches Wissen benötigen
+
+* Betriebszeit (wann ist der brunnen in betrieb)
+	* [seasonal=(yes/no/spring/summer…)](https://wiki.openstreetmap.org/wiki/Key:seasonal): drinking_water:seasonal=(yes/no/summer…)
+	* [opening_hours](https://wiki.openstreetmap.org/wiki/Key:opening_hours)
+	* [access:conditional=*](https://wiki.openstreetmap.org/wiki/Conditional_restrictions)
+	* Betreiber: [operator](https://wiki.openstreetmap.org/wiki/Key:operator)=*
+    
+Weiter mögliche (nicht schlechte) Tags
+
+* [fee=yes/no](https://wiki.openstreetmap.org/wiki/Key:fee)
+* [drinking_water=yes/no](https://wiki.openstreetmap.org/wiki/Key:drinking_water) (zur zusätzlichen Versicherung ob es sich um Trinkwasser handelt bzw. als Anfügung zu z.B. Toiletten, wo es trinkwasser gibt, die ertse Funktion jedoch nicht Trinkwasser abzapfen ist)
+* [check_ date](https://wiki.openstreetmap.org/wiki/Key:check_date) (wann wurde der Punkt zuletzt überprüft)
+* indoor=yes/no
 
 # Setup
 
