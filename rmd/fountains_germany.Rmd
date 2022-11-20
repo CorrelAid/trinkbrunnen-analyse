@@ -1,0 +1,174 @@
+---
+title: "Analyse von Trinkbrunnen in Deutschland auf Open Street Maps (OSM)"
+author: "Enrico Lauckner (hamburg@correlaid.org / bremen@correlaid.org)"
+date: "11/20/2022"
+output: correltools::html_yeti
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F, warning = FALSE, message = FALSE)
+
+library(dplyr)
+library(ggrepel)
+```
+
+```{r load}
+res_df <- read.csv(here::here("data/processed/city_tags.csv"),
+                   sep=';')
+
+city_summary_df <- read.csv(here::here("data/processed/city_summary.csv"),
+                   sep=';')
+
+missing_tags_df <- read.csv(here::here("data/processed/missing_tags.csv"),
+                   sep=';')
+```
+
+## Zusammenfassung
+
+* fountains_osm: Eingetragene Trinkbrunnen in OSM
+* fountains_per_1000: Eingetragene Trinkbrunnen in OSM pro 1.000 Einwohner
+* fountains_official: Offiziele Anzahl Trinbrunnen (manuell von tiptap bei 
+ausgewählten Städten abgefragt)
+* official_vs_osm: Eingetragene Trinkbrunnen in OSM minus offiziele 
+Anzahl Trinbrunnen
+* mean_quality: Durchschnittliche Qualität der Metadaten (Erklärung siehe unten)
+
+```{r}
+city_summary_df %>% 
+  select(c('city', 'population', 'fountains_osm', 'official_vs_osm', 
+           'fountains_per_1000', 'fountains_official', 'mean_quality')) %>%
+  head(10)
+```
+
+
+## Trinkbrunnen OSM
+
+```{r}
+col <- 'fountains_osm'
+
+city_top10 <- city_summary_df %>%
+                arrange(col) %>%
+                head(10)
+
+city_top10$city <- factor(city_top10$city, levels = city_top10$city[order(city_top10[col])])
+
+ggplot(data=city_top10, aes_string(x=col, y='city')) + 
+  geom_bar(stat="identity", fill="orange") + 
+  xlab(col) + 
+  ylab('')
+```
+
+
+## Offiziell vs OSM
+
+In den meisten Städten sind in OSM mehr Trinkbrunnen eingetragen als offiziell
+angegeben. Ausnahme Stuttgart, hier scheinen noch viele Brunnen in OSM zu fehlen.
+
+```{r}
+col <- 'official_vs_osm'
+
+tmp_df <- city_summary_df %>%
+  select(c(city, official_vs_osm)) %>%
+  filter(!is.na(official_vs_osm)) %>%
+  arrange(official_vs_osm)
+
+tmp_df$city <- factor(tmp_df$city, levels = tmp_df$city[order(tmp_df[col])])
+
+ggplot(data=tmp_df, aes_string(x=col, y='city')) + 
+  geom_bar(stat="identity", fill="orange") + 
+  xlab(col) + 
+  ylab('')
+```
+
+## Trinkbrunnen OSM pro 1.000 Einwohner
+
+```{r}
+col <- 'fountains_per_1000'
+
+city_top10 <- city_summary_df %>%
+                arrange_(paste0("-", col)) %>%
+                head(10)
+
+city_top10$city <- factor(city_top10$city, levels = city_top10$city[order(city_top10[col])])
+
+ggplot(data=city_top10, aes_string(x=col, y='city')) + 
+  geom_bar(stat="identity", fill="orange") + 
+  xlab(col) + 
+  ylab('')
+```
+
+## Qualität Metadaten OSM
+
+Leider sind die Metadaten/Tags sehr schlecht gepflegt, selbst das bestgefüllte 
+Tag `wheelchair` fehlt bei fast 75% aller Nodes
+
+```{r}
+col <- 'Missing'
+missing_tags_df$tag <- rownames(missing_tags_df)
+
+missing_top <- missing_tags_df %>%
+                filter(!rownames(missing_tags_df) %in% c('osm_id', 'geometry', 
+                                           'city', 'amenity')) %>% 
+                arrange_(col) %>%
+                head(10)
+
+missing_top$tag <- factor(missing_top$tag, levels = 
+                            missing_top$tag[order(-missing_top[col])])
+
+ggplot(data=missing_top, aes_string(x=col, y='tag')) + 
+  geom_bar(stat="identity", fill="orange") + 
+  xlab(col) + 
+  ylab('')
+```
+
+Aufgrund fehlender Daten wird die Qualität eines Punktes nur mit den folgenden 
+Tags bestimmt:
+
+* wheelchair
+  ```{r}
+  data.frame(table(res_df$wheelchair)) %>% arrange(-Freq)
+  ```
+* bottle
+  ```{r}
+  data.frame(table(res_df$bottle)) %>% arrange(-Freq)
+  ```
+* access
+  ```{r}
+  data.frame(table(res_df$access)) %>% arrange(-Freq)
+  ```
+
+Für jedes vorhandene Tag wird ein Punkt vergeben, diese summiert und durch die
+Anzahl der vewendeten Tags geteilt. Daraus ergeben sich 100% wenn alle Tags 
+gefüllt sind, 66% wenn 2/3 Tags gefüllt sind usw. Daraus ergbit sich folgendes
+Ranking:
+
+```{r}
+col <- 'mean_quality'
+
+city_top10 <- city_summary_df %>%
+                arrange_(paste0("-", col)) %>%
+                head(10)
+
+city_top10$city <- factor(city_top10$city, levels = city_top10$city[order(city_top10[col])])
+
+ggplot(data=city_top10, aes_string(x=col, y='city')) + 
+  geom_bar(stat="identity", fill="orange") + 
+  xlab(col) + 
+  ylab('')
+```
+
+## Anzahl Trinkbrunnen vs Qualität
+
+Die meisten Städte befinden sich im schlechtesten Quadranten links unten (wenig
+eingetragene Trinkbrunnen relativ zur Einwohnerzahl, schlechte Qualität). 
+Der beste Quadrant rechts oben (viele Trinkbrunnen, hohe Qualität der Metadaten) 
+ist leider komplett leer
+
+```{r}
+city_top <- city_summary_df %>%
+                head(50)
+
+ggplot(city_top, aes_string(x='mean_quality', y='fountains_per_1000', label='city')) + 
+  geom_point() + 
+    geom_text_repel(size = 3)
+```
