@@ -4,19 +4,23 @@ Trinkwasser Analyse (tiptap: https://atiptap.org/)
 # License
 Code (from CorrelAid e.V.), data and map data (from OpenStreetMap) are licensed differently for this project. See `LICENSE` for details.
 
-# What is this project about?
+# Outputs
 
-## General
-
-Analysis of Open Street Maps (OSM) data regarding drinking fountains in Germany.
+1. [Analysis of Open Street Maps (OSM) data](https://correlaid.github.io/trinkbrunnen-analyse/analysis-fountains-germany.html) regarding drinking fountains in Germany.
 
 * For cities get the number of listed drinking points per 1000 inhabitants
 * Some cities provided official numbers of drinking fountains which can be compared
 to listed data in OSM
 * Analyse quality of meta data of the received points by comparing it with 
 defined mandatory information
+[![Screenshot 2023-07-03 at 17 11 13](https://github.com/CorrelAid/trinkbrunnen-analyse/assets/13187448/8e2c69a7-5326-4325-966f-10781ae291f1)](https://correlaid.github.io/trinkbrunnen-analyse/analysis-fountains-germany.html)
 
-## Quality of Meta Data (German)
+2. [Map of drinking fountains in Germany](https://correlaid.github.io/trinkbrunnen-analyse/map-deutschland-drinking-water.html)
+
+[![Screenshot 2023-07-03 at 17 11 30](https://github.com/CorrelAid/trinkbrunnen-analyse/assets/13187448/0bbf1ba3-2d8c-4088-aa3e-f63d5c4b450b)](https://correlaid.github.io/trinkbrunnen-analyse/map-deutschland-drinking-water.html)
+
+
+# Quality of Meta Data (German)
 
 Generelle beobachtbare Eigenschaften
 [https://wiki.openstreetmap.org/wiki/Tag:amenity%3Ddrinking_water](https://wiki.openstreetmap.org/wiki/Tag:amenity%3Ddrinking_water) 
@@ -129,15 +133,16 @@ Data from OSM are under `data/processed`. They can be regenerated/updated by run
 # Generate outputs
 
 Outputs are saved in the `docs` folder so that they can be accessible via GitHub Pages.
+
 ## Analysis
-for the R Markdown analysis (`docs/deutschland-drinking-water.html`), run the following in the R console:
+for the R Markdown analysis (`docs/deutschland-drinking-water.html` / [online analysis](https://correlaid.github.io/trinkbrunnen-analyse/analysis-fountains-germany.html)), run the following in the R console:
 
 ```
 rmarkdown::render(here::here("rmd/analysis-fountains-germany.Rmd"), output_file = here::here("docs/analysis-fountains-germany.html"))
 ```
 
 ## Map
-For the map (`docs/deutschland-drinking-water.html`), activate your Python environment (see above) and run in your terminal:
+For the map (`docs/deutschland-drinking-water.html` / [online map](https://correlaid.github.io/trinkbrunnen-analyse/map-deutschland-drinking-water.html)), activate your Python environment (see above) and run in your terminal:
 
 ```
 jupyter execute rmd/map-fountains-germany.ipynb
