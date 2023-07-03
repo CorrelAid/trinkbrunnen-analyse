@@ -28,9 +28,9 @@ SOFTWARE.
 ## Map data
 
 Data in `data/processed` is 
-- directly from [OpenStreetMap](https://www.openstreetmap.org/copyright) (`city_tags.csv`)
+- directly from OpenStreetMap: https://www.openstreetmap.org/copyright (`city_tags.csv`)
 - or derived from this data (`city_summary.csv`, `missing_tags.csv`)
 
 This data is used for maps and analyses. Separate attribution notice in the HTML output documents in `docs`. 
 
-Find out more [here](https://www.openstreetmap.org/copyright).
+Find out more here: https://www.openstreetmap.org/copyright.
