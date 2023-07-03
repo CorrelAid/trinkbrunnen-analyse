@@ -6,7 +6,9 @@ output: correltools::html_yeti
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = F, warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(echo = F,
+                      warning = FALSE,
+                      message = FALSE)
 
 library(dplyr)
 library(ggrepel)
@@ -14,13 +16,15 @@ library(ggrepel)
 
 ```{r load}
 res_df <- read.csv(here::here("data/processed/city_tags.csv"),
-                   sep=';')
+                   sep = ';')
 
-city_summary_df <- read.csv(here::here("data/processed/city_summary.csv"),
-                   sep=';')
+city_summary_df <-
+  read.csv(here::here("data/processed/city_summary.csv"),
+           sep = ';')
 
-missing_tags_df <- read.csv(here::here("data/processed/missing_tags.csv"),
-                   sep=';')
+missing_tags_df <-
+  read.csv(here::here("data/processed/missing_tags.csv"),
+           sep = ';')
 ```
 
 ## Zusammenfassung
@@ -34,9 +38,18 @@ Anzahl Trinbrunnen
 * mean_quality: Durchschnittliche Qualität der Metadaten (Erklärung siehe unten)
 
 ```{r}
-city_summary_df %>% 
-  select(c('city', 'population', 'fountains_osm', 'official_vs_osm', 
-           'fountains_per_1000', 'fountains_official', 'mean_quality')) %>%
+city_summary_df %>%
+  select(
+    c(
+      'city',
+      'population',
+      'fountains_osm',
+      'official_vs_osm',
+      'fountains_per_1000',
+      'fountains_official',
+      'mean_quality'
+    )
+  ) %>%
   head(10)
 ```
 
@@ -47,14 +60,15 @@ city_summary_df %>%
 col <- 'fountains_osm'
 
 city_top10 <- city_summary_df %>%
-                arrange(col) %>%
-                head(10)
+  arrange(col) %>%
+  head(10)
 
-city_top10$city <- factor(city_top10$city, levels = city_top10$city[order(city_top10[col])])
+city_top10$city <-
+  factor(city_top10$city, levels = city_top10$city[order(city_top10[col])])
 
-ggplot(data=city_top10, aes_string(x=col, y='city')) + 
-  geom_bar(stat="identity", fill="orange") + 
-  xlab(col) + 
+ggplot(data = city_top10, aes_string(x = col, y = 'city')) +
+  geom_bar(stat = "identity", fill = "orange") +
+  xlab(col) +
   ylab('')
 ```
 
@@ -72,11 +86,12 @@ tmp_df <- city_summary_df %>%
   filter(!is.na(official_vs_osm)) %>%
   arrange(official_vs_osm)
 
-tmp_df$city <- factor(tmp_df$city, levels = tmp_df$city[order(tmp_df[col])])
+tmp_df$city <-
+  factor(tmp_df$city, levels = tmp_df$city[order(tmp_df[col])])
 
-ggplot(data=tmp_df, aes_string(x=col, y='city')) + 
-  geom_bar(stat="identity", fill="orange") + 
-  xlab(col) + 
+ggplot(data = tmp_df, aes_string(x = col, y = 'city')) +
+  geom_bar(stat = "identity", fill = "orange") +
+  xlab(col) +
   ylab('')
 ```
 
@@ -86,14 +101,15 @@ ggplot(data=tmp_df, aes_string(x=col, y='city')) +
 col <- 'fountains_per_1000'
 
 city_top10 <- city_summary_df %>%
-                arrange_(paste0("-", col)) %>%
-                head(10)
+  arrange_(paste0("-", col)) %>%
+  head(10)
 
-city_top10$city <- factor(city_top10$city, levels = city_top10$city[order(city_top10[col])])
+city_top10$city <-
+  factor(city_top10$city, levels = city_top10$city[order(city_top10[col])])
 
-ggplot(data=city_top10, aes_string(x=col, y='city')) + 
-  geom_bar(stat="identity", fill="orange") + 
-  xlab(col) + 
+ggplot(data = city_top10, aes_string(x = col, y = 'city')) +
+  geom_bar(stat = "identity", fill = "orange") +
+  xlab(col) +
   ylab('')
 ```
 
@@ -107,17 +123,17 @@ col <- 'Missing'
 missing_tags_df$tag <- rownames(missing_tags_df)
 
 missing_top <- missing_tags_df %>%
-                filter(!rownames(missing_tags_df) %in% c('osm_id', 'geometry', 
-                                           'city', 'amenity')) %>% 
-                arrange_(col) %>%
-                head(10)
+  filter(!rownames(missing_tags_df) %in% c('osm_id', 'geometry',
+                                           'city', 'amenity')) %>%
+  arrange_(col) %>%
+  head(10)
 
-missing_top$tag <- factor(missing_top$tag, levels = 
+missing_top$tag <- factor(missing_top$tag, levels =
                             missing_top$tag[order(-missing_top[col])])
 
-ggplot(data=missing_top, aes_string(x=col, y='tag')) + 
-  geom_bar(stat="identity", fill="orange") + 
-  xlab(col) + 
+ggplot(data = missing_top, aes_string(x = col, y = 'tag')) +
+  geom_bar(stat = "identity", fill = "orange") +
+  xlab(col) +
   ylab('')
 ```
 
@@ -146,14 +162,15 @@ Ranking:
 col <- 'mean_quality'
 
 city_top10 <- city_summary_df %>%
-                arrange_(paste0("-", col)) %>%
-                head(10)
+  arrange_(paste0("-", col)) %>%
+  head(10)
 
-city_top10$city <- factor(city_top10$city, levels = city_top10$city[order(city_top10[col])])
+city_top10$city <-
+  factor(city_top10$city, levels = city_top10$city[order(city_top10[col])])
 
-ggplot(data=city_top10, aes_string(x=col, y='city')) + 
-  geom_bar(stat="identity", fill="orange") + 
-  xlab(col) + 
+ggplot(data = city_top10, aes_string(x = col, y = 'city')) +
+  geom_bar(stat = "identity", fill = "orange") +
+  xlab(col) +
   ylab('')
 ```
 
@@ -166,9 +183,10 @@ ist leider komplett leer
 
 ```{r}
 city_top <- city_summary_df %>%
-                head(50)
+  head(50)
 
-ggplot(city_top, aes_string(x='mean_quality', y='fountains_per_1000', label='city')) + 
-  geom_point() + 
-    geom_text_repel(size = 3)
+ggplot(city_top,
+       aes_string(x = 'mean_quality', y = 'fountains_per_1000', label = 'city')) +
+  geom_point() +
+  geom_text_repel(size = 3)
 ```
