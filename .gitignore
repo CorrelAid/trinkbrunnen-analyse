@@ -4,3 +4,4 @@
 .Ruserdata
 
 data/preprocessed_gdpr
+rmd/*html # output should go into docs 

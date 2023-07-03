@@ -1,6 +1,9 @@
 Trinkwasser Analyse (tiptap: https://atiptap.org/)
 ================
 
+# License
+Code (from CorrelAid e.V.), data and map data (from OpenStreetMap) are licensed differently for this project. See `LICENSE` for details.
+
 # What is this project about?
 
 ## General
@@ -52,7 +55,8 @@ Weiter mögliche (nicht schlechte) Tags
 
 # Setup
 
-## `renv`: Installing Packages
+## Package dependencies
+### Set up R `renv`: Installing R Packages
 
 `renv` brings project-local R dependency management to our project.
 `renv` uses a lockfile (`renv.lock`) to capture the state of your
@@ -67,14 +71,16 @@ environment only used for our project. You can find this library in
 fails, you will be presented something in the like of when you first
 start R after cloning the repo:
 
-    renv::restore()
+```
+renv::restore()
     This project has not yet been activated. Activating this project will ensure the project library is used during restore. Please see ?renv::activate for more details. Would you like to activate this project before restore? [Y/n]:
+```
 
 Follow along with `Y` and `renv::restore()` will do its work downloading
 and installing all dependencies. `renv` uses a local `.Rprofile` and
 `renv/activate.R` script to handle our project dependencies.
 
-### Adding a new package
+#### Adding a new package
 
 If you need to add a new package, you can install it as usual
 (`install.packages` etc.). Then, to add your package to the `renv.lock`:
@@ -86,47 +92,57 @@ and commit and push your `renv.lock`.
 Other team members can then run `renv::restore()` to install the added
 package(s) on their laptop.
 
+### Set up Python environment 
+
+Python dependencies are managed in a virtualenv. You need to install [virtualenv](https://virtualenv.pypa.io/en/latest/installation.html) (it might also work with the built-in [`venv` subset](https://docs.python.org/3/library/venv.html)).
+
+activate the virtual environment in the Terminal. 
+
+```
+source venv/bin/activate
+```
+
+install the packages in `rmd/map-fountains-germany.ipynb`  by:
+
+```
+pip3 install -r requirements.txt
+```
+
 ## Data
+
+### Helper data
 
 You need the following data files in order to run this project:
 
-``` r
-system2("tree", c("data/raw")) # works on mac and potentially linux. 
+```
+data/raw
+├── anzahl_brunnen.xlsx
+└── staedte.xlsx
 ```
 
-# Developer information
+They are part of the repository.
 
-\[the following can also be moved to the wiki if you decide to have
-one\]
+## Data from OSM 
 
-## Definition of Done
+Data from OSM are under `data/processed`. They can be regenerated/updated by running `R/get_osm_data.R`.
 
-Default Definition of Done can be found
-[here](https://github.com/CorrelAid/definition-of-done). Adapt if
-needed.
+# Generate outputs
 
-## Code styling
+Outputs are saved in the `docs` folder so that they can be accessible via GitHub Pages.
+## Analysis
+for the R Markdown analysis (`docs/deutschland-drinking-water.html`), run the following in the R console:
 
-# How to operate this project?
+```
+rmarkdown::render(here::here("rmd/analysis-fountains-germany.Rmd"), output_file = here::here("docs/analysis-fountains-germany.html"))
+```
 
-\[the following can also be moved to the wiki if you decide to have
-one\]
+## Map
+For the map (`docs/deutschland-drinking-water.html`), activate your Python environment (see above) and run in your terminal:
 
-explain how the output(s) of this project can be handled/operated, for
-example:
-
--   how to knit the report(s)
--   where to create/find the data visualizations
--   how to update data
--   what would need to be updated if someone wanted to re-run your
-    analysis with different data
+```
+jupyter execute rmd/map-fountains-germany.ipynb
+```
 
 # Limitations
 
-be honest about the limitations of your project, e.g.:
-
--   methodological: maybe another model would be more suitable?
--   reproducibility: what are limits of reproducibility? is there
-    something hard-coded/specific to the data that you used?
--   best practices: maybe some code is particularly messy and people
-    working on it in the future should know about it in advance?
+This was an adhoc one-off analysis for [atiptap e.V.](https://atiptap.org). Hence, styling was not the priority for this project. 
